@@ -1,0 +1,229 @@
+CREATION DES VLANS
+
+S1
+enable
+conf t
+host S1
+vlan 1O
+name DRH
+exit
+vlan 50
+name NATIF
+end
+wr mem
+
+
+S2
+enable
+conf t
+host S2
+vlan 20
+name MAN
+exit
+vlan 50
+name NATIF
+end
+wr mem
+
+
+S3
+enable
+conf t
+host S3
+vlan 30
+name COM
+exit
+vlan 50
+name NATIF
+end
+wr mem
+
+S4
+enable
+conf t
+host S4
+vlan 40
+name FIN
+exit
+vlan 50
+name NATIF
+end
+wr mem
+
+
+Associer les ports aux VLANS
+
+S1:
+en
+conf t
+interface range fast 0/1-10
+switchport mode access
+switchport access vlan 10
+switchport non
+end
+wr mem
+
+S2:
+en
+conf t
+interface range fast 0/1-10
+switchport mode access
+switchport access vlan 20
+switchport non
+end
+wr mem
+
+
+S3:
+en
+conf t
+interface range fast 0/1-10
+switchport mode access
+switchport access vlan 30
+switchport non
+end
+wr mem
+
+
+S4:
+en
+conf t
+interface range fast0/1-10
+switchport mode access
+switchport access vlan 40
+switchport non
+end
+wr mem
+
+
+
+Création des VLANS sur nos 02 MLS
+
+MLS1
+
+ena
+conf t
+host MLS1
+vlan 10
+nam DRH
+vlan 20
+nam MAN
+vlan 30
+nam COM
+vlan 40
+nam FIN
+vlan 50
+nam NATIF
+end 
+wr mem
+
+
+
+MLS2
+
+ena
+conf t
+host MLS2
+vlan 10
+nam DRH
+vlan 20
+nam MAN
+vlan 30
+nam COM
+vlan 40
+nam FIN
+vlan 50
+nam NATIF
+end 
+wr mem 
+
+
+
+Configurations des interfaces en mode trunk
+
+MLS1 et MLS2
+en
+conf t
+inter range gi1/0/1-4
+switchport mode access
+switchport mode trunk
+switchport trunk native vlan 50
+switchport non
+end
+wr mem
+
+S1; S2; S3; S4
+
+en
+conf t
+inter range gi0/1-2
+switchport mode trunk
+switchport trunk native vlan 50
+switchport non
+end
+wr mem
+
+
+
+Configuration routage inter-VLAN 
+
+MS1
+
+en
+conf t
+ip routing
+interface vlan 10
+No shut
+ip add 192.168.10.252 255.255.255.0
+exit
+interface vlan 20
+No shut
+ip add 192.168.20.252 255.255.255.0
+exit
+interface vlan 30
+No shut
+ip add 192.168.30.252 255.255.255.0
+exit
+interface vlan 40
+No shut
+ip add 192.168.40.252 255.255.255.0
+exit
+interface vlan 99
+No shut
+ip add 192.168.99.252 255.255.255.0
+end
+wr mem
+
+
+MLS2
+
+en
+conf t
+ip routing
+interface vlan 10
+No shut
+ip add 192.168.10.253 255.255.255.0
+exit
+interface vlan 20
+No shut
+ip add 192.168.20.253 255.255.255.0
+exit
+interface vlan 30
+No shut
+ip add 192.168.30.253 255.255.255.0
+exit
+interface vlan 40
+No shut
+ip add 192.168.40.253 255.255.255.0
+exit
+interface vlan 99
+No shut
+ip add 192.168.99.253 255.255.255.0
+end
+wr mem
+
+
+
+
+
+
